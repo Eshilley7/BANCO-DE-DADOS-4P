@@ -1,4 +1,4 @@
--- Active: 1789768387197@@127.0.0.1@5432@bd_hortifruti@public
+-- Active: 1790028480216@@127.0.0.1@5432@bd_hortifruti@public
 
 -- CREATE DATABASE bd_hortifruti;
 DROP TABLE IF EXISTS itens_venda;
@@ -45,7 +45,7 @@ SELECT * FROM itens_venda;
 -- Consulta 1 Listar, sem repetição, o código, o nome, a categoria e a unidade de medida dos produtos vendidos, ordenados pela categoria e, dentro dela, pelo nome do produto. O resultado é o cadastro de produtos do hortifrúti, reconstruído a partir dos itens.
 
 SELECT DISTINCT
-    produto_id, produto_nome, categoria, unidade
+    produto_id, produto_nome, categoria, unidade, valor_unitario
 FROM
     itens_venda
 ORDER BY
@@ -99,7 +99,9 @@ LIMIT 5 OFFSET 5;
 -- Consulta 6. Apresentar, para cada venda, o número, a data, o destino (destino), a quantidade de itens (itens) e o valor total (valor_total), ordenado pelo valor total, do maior para o menor. O destino é o bairro de entrega ou, nas vendas sem entrega, o texto Retirada no balcao.
 
 SELECT 
-    venda_id AS numero, data_venda AS data, COALESCE(bairro_entrega, 'Retirada no balcao') AS destino, COUNT(*) AS itens, 
+    venda_id AS numero, data_venda AS data, 
+    COALESCE(bairro_entrega, 'Retirada no balcao') AS destino, 
+    COUNT(*) AS itens, 
     ROUND(SUM(quantidade * valor_unitario), 2) AS valor_total
 FROM
     itens_venda
@@ -120,7 +122,7 @@ FROM
 GROUP BY 
     data_venda
 ORDER BY 
-    data_venda ASC;
+    data_venda;
 
 -- Consulta 8. Apresentar, para cada produto, o código, o nome, a unidade de medida, a quantidade total vendida (qtd_total), o faturamento (faturamento), a média simples do valor unitário (media_simples) e o valor médio recebido por unidade de medida vendida (media_ponderada), ordenado pelo faturamento, do maior para o menor.
 
@@ -176,3 +178,29 @@ GROUP BY venda_id
 HAVING ROUND(SUM(quantidade * valor_unitario), 2)
     <> SUM(ROUND(quantidade * valor_unitario, 2))
 ORDER BY venda_id;
+
+-- Questão 1:
+-- As colunas que repetem fatos que pertencem apenas à venda são: venda_id, data_venda e bairro_entrega. Uma mesma venda possui vários itens, por isso essas informações aparecem repetidas em várias linhas.
+-- As colunas que repetem fatos que pertencem apenas ao produto são: produto_id, produto_nome, categoria e unidade. Um mesmo produto pode aparecer em várias vendas e, por isso, essas informações também são repetidas.
+-- O valor_unitario também pode se repetir, mas não representa somente um fato do produto. Ele pertence ao item da venda, pois o preço pode mudar ao longo da semana conforme a oferta. Portanto, o mesmo produto pode ter valores_unitario diferentes em vendas diferentes.
+-- Se o nome de um produto fosse alterado somente em algumas linhas, a Consulta 1 poderia apresentar o mesmo produto_id associado a nomes diferentes, criando registros duplicados para o mesmo produto.
+-- Na Consulta 8, o agrupamento seria dividido, pois produto_id e
+-- produto_nome fazem parte do GROUP BY. Assim, o mesmo produto poderia
+-- aparecer em mais de uma linha, com quantidades, faturamentos e médias
+-- calculados separadamente.
+
+-- Questão 2:
+-- Duas regras do minimundo que a tabela não garante são:
+-- 1. A quantidade deve ser sempre maior que zero.
+-- 2. Um mesmo produto pode aparecer no máximo uma vez em cada venda.
+-- Exemplo de INSERT que o SGBD aceitaria, mas viola a regra de que a quantidade deve ser maior que zero:
+-- INSERT INTO itens_venda
+-- (venda_id, data_venda, bairro_entrega, produto_id, produto_nome,
+--  categoria, unidade, quantidade, valor_unitario)
+-- VALUES
+-- (4000, '2026-08-10', NULL, 1, 'Banana prata', 'Fruta', 'Kg', 0, 5.99);
+
+-- Questão 3:
+-- A média ponderada do morango é menor que a média simples porque os maiores preços foram aplicados a quantidades menores, enquanto o preço mais baixo (R$ 8,90) foi aplicado a 3 unidades. Como a média ponderada considera a quantidade vendida, o preço de R$ 8,90 tem maior influência no resultado.
+-- A média ponderada do abacaxi é maior que a média simples porque o maior preço (R$ 7,90) foi aplicado a uma quantidade maior, de 2 unidades. Dessa forma, esse preço tem maior peso no cálculo da média ponderada.
+-- As duas médias do cheiro-verde são iguais porque todas as unidades foram vendidas pelo mesmo valor unitário de R$ 2,50. Portanto, não importa a quantidade utilizada como peso: tanto a média simples quanto a média ponderada resultam em R$ 2,50.
