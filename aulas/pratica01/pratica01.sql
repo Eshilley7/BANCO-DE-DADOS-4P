@@ -1,15 +1,43 @@
--- Active: 1790118528059@@127.0.0.1@5432@bd_hortifruti@public
+-- Active: 1790726396946@@127.0.0.1@5432@bd_hortifruti@public
 
 -- CREATE DATABASE bd_hortifruti;
 DROP TABLE IF EXISTS itens_venda;
+
+DROP TABLE IF EXISTS produtos;
+
+DROP TABLE IF EXISTS vendas;
 CREATE TABLE itens_venda (
-    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, venda_id INTEGER NOT NULL, data_venda DATE NOT NULL, bairro_entrega TEXT  /*pode ser null pois significa que retirou no local*/, produto_id INTEGER NOT NULL, produto_nome TEXT NOT NULL, categoria TEXT NOT NULL, unidade TEXT NOT NULL, quantidade NUMERIC(6, 3) NOT NULL /*kg tem 3 casas, ex: 1.527*/, valor_unitario NUMERIC(6, 2) NOT NULL /* preço em reais, 2 casas decimais (centavos)*/
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+    venda_id INTEGER NOT NULL, 
+    data_venda DATE NOT NULL, 
+    bairro_entrega TEXT  /*pode ser null pois significa que retirou no local*/, 
+    produto_id INTEGER NOT NULL, 
+    produto_nome TEXT NOT NULL, 
+    categoria TEXT NOT NULL, 
+    unidade TEXT NOT NULL, 
+    quantidade NUMERIC(6, 3) NOT NULL /*kg tem 3 casas, ex: 1.527*/, 
+    valor_unitario NUMERIC(6, 2) NOT NULL /* preço em reais, 2 casas decimais (centavos)*/
 );
 INSERT INTO itens_venda (venda_id, data_venda, bairro_entrega, produto_id, produto_nome, categoria, unidade, quantidade, valor_unitario) VALUES 
 -- 2026-08-03, segunda-feira
-(3001, '2026-08-03', NULL, 1, 'Banana prata', 'Fruta', 'Kg', 1.235, 5.99), (3001, '2026-08-03', NULL, 5, 'Tomate', 'Legume', 'Kg', 0.874, 7.49), (3001, '2026-08-03', NULL, 10, 'Alface crespa', 'Verdura', 'UN', 1.000, 2.99), (3001, '2026-08-03', NULL, 12, 'Cheiro-verde', 'Verdura', 'UN', 2.000, 2.50), (3002, '2026-08-03', NULL, 6, 'Batata', 'Legume', 'Kg', 2.140, 4.99), (3002, '2026-08-03', NULL, 9, 'Cebola', 'Legume', 'Kg', 0.965, 5.19), (3003, '2026-08-03', 'Centro', 3, 'Abacaxi', 'Fruta', 'UN', 2.000, 7.90), (3003, '2026-08-03', 'Centro', 2, 'Laranja pera', 'Fruta', 'Kg', 3.180, 3.79), (3003, '2026-08-03', 'Centro', 8, 'Cenoura', 'Legume', 'Kg', 1.020, 4.29),
+(3001, '2026-08-03', NULL, 1, 'Banana prata', 'Fruta', 'Kg', 1.235, 5.99), 
+(3001, '2026-08-03', NULL, 5, 'Tomate', 'Legume', 'Kg', 0.874, 7.49), 
+(3001, '2026-08-03', NULL, 10, 'Alface crespa', 'Verdura', 'UN', 1.000, 2.99), 
+(3001, '2026-08-03', NULL, 12, 'Cheiro-verde', 'Verdura', 'UN', 2.000, 2.50), 
+(3002, '2026-08-03', NULL, 6, 'Batata', 'Legume', 'Kg', 2.140, 4.99), 
+(3002, '2026-08-03', NULL, 9, 'Cebola', 'Legume', 'Kg', 0.965, 5.19), 
+(3003, '2026-08-03', 'Centro', 3, 'Abacaxi', 'Fruta', 'UN', 2.000, 7.90), 
+(3003, '2026-08-03', 'Centro', 2, 'Laranja pera', 'Fruta', 'Kg', 3.180, 3.79), 
+(3003, '2026-08-03', 'Centro', 8, 'Cenoura', 'Legume', 'Kg', 1.020, 4.29),
 -- 2026-08-04, terca-feira
-(3004, '2026-08-04', NULL, 5, 'Tomate', 'Legume', 'Kg', 1.460, 7.49), (3004, '2026-08-04', NULL, 7, 'Batata-doce', 'Legume', 'Kg', 1.785, 4.49), (3004, '2026-08-04', NULL, 11, 'Couve', 'Verdura', 'UN', 1.000, 3.00), (3005, '2026-08-04', NULL, 4, 'Morango', 'Fruta', 'UN', 2.000, 9.90), (3006, '2026-08-04', 'Lagoinha', 1, 'Banana prata', 'Fruta', 'Kg', 2.310, 5.99), (3006, '2026-08-04', 'Lagoinha', 6, 'Batata', 'Legume', 'Kg', 1.505, 4.99), (3006, '2026-08-04', 'Lagoinha', 10, 'Alface crespa', 'Verdura', 'UN', 2.000, 2.99), (3006, '2026-08-04', 'Lagoinha', 12, 'Cheiro-verde', 'Verdura', 'UN', 1.000, 2.50),
+(3004, '2026-08-04', NULL, 5, 'Tomate', 'Legume', 'Kg', 1.460, 7.49), 
+(3004, '2026-08-04', NULL, 7, 'Batata-doce', 'Legume', 'Kg', 1.785, 4.49), 
+(3004, '2026-08-04', NULL, 11, 'Couve', 'Verdura', 'UN', 1.000, 3.00), 
+(3005, '2026-08-04', NULL, 4, 'Morango', 'Fruta', 'UN', 2.000, 9.90), 
+(3006, '2026-08-04', 'Lagoinha', 1, 'Banana prata', 'Fruta', 'Kg', 2.310, 5.99), 
+(3006, '2026-08-04', 'Lagoinha', 6, 'Batata', 'Legume', 'Kg', 1.505, 4.99), 
+(3006, '2026-08-04', 'Lagoinha', 10, 'Alface crespa', 'Verdura', 'UN', 2.000, 2.99), 
+(3006, '2026-08-04', 'Lagoinha', 12, 'Cheiro-verde', 'Verdura', 'UN', 1.000, 2.50),
 -- 2026-08-05, quarta-feira
 (3007, '2026-08-05', NULL, 2, 'Laranja pera', 'Fruta', 'Kg', 2.450, 3.49),
 (3007, '2026-08-05', NULL, 5, 'Tomate', 'Legume', 'Kg', 0.635, 7.99),
@@ -204,3 +232,37 @@ ORDER BY venda_id;
 -- A média ponderada do morango é menor que a média simples porque os maiores preços foram aplicados a quantidades menores, enquanto o preço mais baixo (R$ 8,90) foi aplicado a 3 unidades. Como a média ponderada considera a quantidade vendida, o preço de R$ 8,90 tem maior influência no resultado.
 -- A média ponderada do abacaxi é maior que a média simples porque o maior preço (R$ 7,90) foi aplicado a uma quantidade maior, de 2 unidades. Dessa forma, esse preço tem maior peso no cálculo da média ponderada.
 -- As duas médias do cheiro-verde são iguais porque todas as unidades foram vendidas pelo mesmo valor unitário de R$ 2,50. Portanto, não importa a quantidade utilizada como peso: tanto a média simples quanto a média ponderada resultam em R$ 2,50.
+
+SELECT 
+    id, venda_id, produto_id, produto_nome, categoria
+FROM 
+    itens_venda
+WHERE
+    produto_id = 5
+ORDER BY
+    venda_id;
+
+UPDATE
+    itens_venda
+SET
+    categoria = 'Fruta'
+WHERE
+    produto_id = 5;
+
+-- Tabela Produto
+
+CREATE TABLE produtos(
+    id INTEGER PRIMARY KEY,
+    nome TEXT NOT NULL UNIQUE, 
+    categoria TEXT NOT NULL CHECK(categoria IN ('Fruta', 'Legume', 'Verdura')), 
+    unidade TEXT NOT NULL CHECK(unidade IN('Kg', 'UN'))
+);
+
+INSERT INTO produtos (id, nome, categoria, unidade)
+SELECT DISTINCT 
+    produto_id, 
+    produto_nome, 
+    categoria, 
+    unidade
+FROM 
+    itens_venda;
